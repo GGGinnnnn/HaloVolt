@@ -132,6 +132,14 @@
                                           SelectedValue="{Binding Settings.SafeRefreshMinutes, Mode=TwoWay}" />
                             </Grid>
                             <Grid Margin="0,18,0,0">
+                                <StackPanel Margin="0,0,64,0">
+                                    <TextBlock Text="读取失败时使用本地缓存" Style="{DynamicResource SettingTitleStyle}" />
+                                    <TextBlock Text="开启后，设备暂时无响应时显示上次成功读取值并标注缓存；关闭后显示“尚未读取”，不把旧值当作当前电量。" Style="{DynamicResource SettingDescriptionStyle}" />
+                                </StackPanel>
+                                <ToggleButton Style="{DynamicResource ToggleSwitchStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsChecked="{Binding Settings.UseCachedFallback, Mode=TwoWay}" />
+                            </Grid>
+                            <Grid Margin="0,18,0,0">
                                 <StackPanel>
                                     <TextBlock Text="允许在设备活动时主动读取" Style="{DynamicResource SettingTitleStyle}" />
                                     <TextBlock Text="关闭后只使用 Windows 缓存和系统电池信息，最省电但外设电量可能滞后。" Style="{DynamicResource SettingDescriptionStyle}" />

@@ -31,6 +31,7 @@ public sealed class AppSettings : ObservableObject
     private ThemeMode _theme = ThemeMode.System;
     private int _safeRefreshMinutes = 15;
     private bool _enablePolling = true;
+    private bool _useCachedFallback = true;
     private bool _monitoringPaused;
     private DateTimeOffset? _pauseUntil;
     private bool _demoMode;
@@ -214,6 +215,12 @@ public sealed class AppSettings : ObservableObject
         set => SetProperty(ref _enablePolling, value);
     }
 
+    public bool UseCachedFallback
+    {
+        get => _useCachedFallback;
+        set => SetProperty(ref _useCachedFallback, value);
+    }
+
     public bool MonitoringPaused
     {
         get => _monitoringPaused;
@@ -352,6 +359,7 @@ public sealed class AppSettings : ObservableObject
         RepeatCooldownMinutes = RepeatCooldownMinutes;
         SafeRefreshMinutes = SafeRefreshMinutes;
         EnablePolling = EnablePolling;
+        UseCachedFallback = UseCachedFallback;
         SystemLowThreshold = SystemLowThreshold;
         if (!Enum.IsDefined(Theme)) Theme = ThemeMode.System;
         if (!Enum.IsDefined(StartupMode)) StartupMode = StartupMode.Silent;

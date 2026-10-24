@@ -239,6 +239,14 @@ public sealed class DeviceMonitor : IDisposable
                     else
                     {
                         AppLog.Debug($"读取无结果 {state.Name}: provider={state.ProviderId} active={active} force={force}");
+                        if (!_settings.UseCachedFallback && active && !state.IsSystemBattery)
+                        {
+                            state.BatteryPercent = null;
+                            state.IsCharging = null;
+                            state.LastUpdated = null;
+                            state.Source = BatterySourceKind.None;
+                            state.IsCached = false;
+                        }
                     }
                 }
                 catch (OperationCanceledException)
@@ -338,6 +346,11 @@ public sealed class DeviceMonitor : IDisposable
 
     private void TryApplyCachedReading(DeviceState state)
     {
+        if (!_settings.UseCachedFallback)
+        {
+            return;
+        }
+
         if (state.IsSystemBattery || !state.SupportsBattery || state.BatteryPercent is not null)
         {
             return;

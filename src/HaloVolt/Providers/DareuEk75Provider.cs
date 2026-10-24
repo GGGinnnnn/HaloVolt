@@ -56,7 +56,7 @@ internal sealed class DareuEk75Provider : IBatteryProvider
                 ProviderName = DisplayName,
                 SupportsBattery = true,
                 Detail = driver is not null
-                    ? $"官方驱动联动 · {mode} · 驱动关闭时自动改用 HID 查询"
+                    ? $"官方驱动读取 · 关闭驱动后自动直读 · {mode}"
                     : $"直接 HID 查询 · {mode} · 无需官方驱动常驻",
                 Tag = new Ek75Target(model, hidPath)
             }
@@ -77,8 +77,9 @@ internal sealed class DareuEk75Provider : IBatteryProvider
             return Reading(driver.Percent, BatterySourceKind.DareuDriver, "DAREU Driver");
         }
 
-        // The vendor feature channel is shared with the official driver. Query it
-        // only when the driver process is gone; otherwise wait for a cached value.
+        // The 65-byte feature channel is shared with the running vendor driver.
+        // Reading it concurrently produces inconsistent values, so direct HID is
+        // used only after the driver process is gone.
         if (IsDriverRunning())
         {
             return null;
