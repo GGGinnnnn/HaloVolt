@@ -12,6 +12,14 @@ public partial class OverviewPage : UserControl
 public partial class DevicesPage : UserControl
 {
     public DevicesPage() => InitializeComponent();
+
+    private void FindDriver_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: DeviceViewModel device })
+        {
+            MainViewModel.OpenWebDriverSearch(device);
+        }
+    }
 }
 
 public partial class AlertsPage : UserControl

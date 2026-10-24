@@ -144,7 +144,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         new(10, "每 10 分钟"),
         new(15, "每 15 分钟"),
         new(30, "每 30 分钟"),
-        new(60, "每 60 分钟")
+        new(60, "每 60 分钟"),
+        new(120, "每 120 分钟")
     ];
 
     public IReadOnlyList<string> ColorPalette { get; } =
@@ -697,6 +698,39 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         catch (Exception ex)
         {
             MessageBox.Show("无法打开日志：" + ex.Message, "HaloVolt", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    public static void OpenWebDriverSearch(DeviceViewModel? device)
+    {
+        if (device is null)
+        {
+            return;
+        }
+
+        var confirm = MessageBox.Show(
+            $"该功能需要联网。\n\n将在默认浏览器中搜索「{device.Name} 官方驱动 / 网页驱动」。搜索词会由浏览器发送给搜索引擎。\n\nHaloVolt 不上传设备信息，也不会读取网页内容；网页驱动里的电量无法自动回传到 HaloVolt。\n\n是否继续？",
+            "联网查找官方驱动",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Information,
+            MessageBoxResult.No);
+        if (confirm != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            var query = Uri.EscapeDataString($"{device.Name} 官方驱动 网页驱动 下载");
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://www.bing.com/search?q=" + query,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("无法打开浏览器：" + ex.Message, "HaloVolt", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 

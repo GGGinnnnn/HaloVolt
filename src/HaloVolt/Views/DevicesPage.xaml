@@ -189,6 +189,9 @@
                                             Command="{Binding SetKeyboardRingCommand}" Visibility="{Binding CanSetKeyboardRing, Converter={StaticResource BoolToVisibility}}" />
                                     <Button Content="取消圆环" Style="{DynamicResource SubtleButtonStyle}" Margin="6,0,0,0" FontSize="11" Padding="8,3" Command="{Binding ClearRingCommand}"
                                             Visibility="{Binding IsRingSelected, Converter={StaticResource BoolToVisibility}}" />
+                                    <Button Content="查找驱动" Style="{DynamicResource SubtleButtonStyle}" Margin="6,0,0,0" FontSize="11" Padding="8,3"
+                                            ToolTip="需要联网：在浏览器中搜索该设备的官方驱动；网页驱动电量无法自动回传"
+                                            Click="FindDriver_Click" />
                                     <TextBlock Text="{Binding RoleHint}" Style="{DynamicResource MicroTextStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
                                                Visibility="{Binding NeedsRoleChoice, Converter={StaticResource BoolToVisibility}}" />
                                     <Border Style="{DynamicResource ChipStyle}" Padding="8,3" Margin="10,0,0,0"

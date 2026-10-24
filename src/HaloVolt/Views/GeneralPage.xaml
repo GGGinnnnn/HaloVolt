@@ -110,15 +110,24 @@
                         <StackPanel>
                             <TextBlock Text="电量读取策略" Style="{DynamicResource SectionTitleStyle}" />
                             <Grid Margin="0,16,0,0">
+                                <StackPanel Margin="0,0,64,0">
+                                    <TextBlock Text="定时轮询电量" Style="{DynamicResource SettingTitleStyle}" />
+                                    <TextBlock Text="开启后按下方间隔自动读取；关闭后只在你手动刷新或打开设置时读取。轮询可能在设备活动时唤醒外设。" Style="{DynamicResource SettingDescriptionStyle}" />
+                                </StackPanel>
+                                <ToggleButton Style="{DynamicResource ToggleSwitchStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsChecked="{Binding Settings.EnablePolling, Mode=TwoWay}" />
+                            </Grid>
+                            <Grid Margin="0,18,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel>
-                                    <TextBlock Text="自动读取间隔" Style="{DynamicResource SettingTitleStyle}" />
+                                    <TextBlock Text="轮询间隔" Style="{DynamicResource SettingTitleStyle}" />
                                     <TextBlock Text="仅在用户活动时按此间隔检查；空闲时完全静默。" Style="{DynamicResource SettingDescriptionStyle}" />
                                 </StackPanel>
                                 <ComboBox Grid.Column="1" Width="140" Style="{DynamicResource ComboBoxStyle}" VerticalAlignment="Center"
+                                          IsEnabled="{Binding Settings.EnablePolling}"
                                           ItemsSource="{Binding RefreshIntervalOptions}" DisplayMemberPath="Label" SelectedValuePath="Value"
                                           SelectedValue="{Binding Settings.SafeRefreshMinutes, Mode=TwoWay}" />
                             </Grid>

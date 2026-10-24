@@ -63,6 +63,12 @@ HaloVolt 不按品牌写死型号，而是按**协议**适配。设备只要暴�
 
 **专属适配**：65 字节 HID feature 的 `Power Management / Battery Status` 命令。官方 DAREU Driver 运行时优先读取驱动值，关闭驱动后直接查询 HID。
 
+## 网页驱动
+
+设备卡片上的「查找驱动」会先提示需要联网，再调用默认浏览器搜索官方驱动。搜索词由浏览器发送给搜索引擎；HaloVolt 不上传设备信息，也不读取网页内容。
+
+**网页驱动里的电量不能自动回传到 HaloVolt**：厂商网页通常通过浏览器 WebHID / 登录会话访问设备，权限属于当前页面；另一个桌面进程无法读取页面里的电量，且不同品牌页面没有统一接口。HaloVolt 的电量仍来自本地 BLE / HID / HID++ / Nordic 52 / EK75 协议。
+
 ## 不能保证支持的情况
 
 - 只提供 input-only vendor collection，没有 output/feature 查询通道（例如部分 `USB 2.4G Receiver 260D:0042` 的非 EK75 设备）

@@ -30,6 +30,7 @@ public sealed class AppSettings : ObservableObject
     private bool _showTrayHintOnMinimize;
     private ThemeMode _theme = ThemeMode.System;
     private int _safeRefreshMinutes = 15;
+    private bool _enablePolling = true;
     private bool _monitoringPaused;
     private DateTimeOffset? _pauseUntil;
     private bool _demoMode;
@@ -207,6 +208,12 @@ public sealed class AppSettings : ObservableObject
         set => SetProperty(ref _safeRefreshMinutes, Math.Clamp(value, 5, 120));
     }
 
+    public bool EnablePolling
+    {
+        get => _enablePolling;
+        set => SetProperty(ref _enablePolling, value);
+    }
+
     public bool MonitoringPaused
     {
         get => _monitoringPaused;
@@ -344,6 +351,7 @@ public sealed class AppSettings : ObservableObject
         CriticalThreshold = CriticalThreshold;
         RepeatCooldownMinutes = RepeatCooldownMinutes;
         SafeRefreshMinutes = SafeRefreshMinutes;
+        EnablePolling = EnablePolling;
         SystemLowThreshold = SystemLowThreshold;
         if (!Enum.IsDefined(Theme)) Theme = ThemeMode.System;
         if (!Enum.IsDefined(StartupMode)) StartupMode = StartupMode.Silent;

@@ -380,7 +380,7 @@ public partial class App : System.Windows.Application
 
             var now = DateTimeOffset.Now;
             var interval = TimeSpan.FromMinutes(Settings.SafeRefreshMinutes);
-            if (ViewModel.RefreshCommand.CanExecute(null) && now - _lastRefreshRequest >= interval)
+            if (Settings.EnablePolling && ViewModel.RefreshCommand.CanExecute(null) && now - _lastRefreshRequest >= interval)
             {
                 _lastRefreshRequest = now;
                 await _monitor.RefreshAsync(force: false, discover: false);
