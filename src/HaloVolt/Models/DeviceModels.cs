@@ -242,7 +242,7 @@ public sealed class DeviceState : ObservableObject
                 BatterySourceKind.WindowsCache => "Windows 缓存",
                 BatterySourceKind.LogitechHidpp => "Logitech HID++",
                 BatterySourceKind.HidFeature => "HID 电量特性",
-                BatterySourceKind.DareuNordic => "DAREU Nordic 2.4G",
+                BatterySourceKind.DareuNordic => "Nordic 52 2.4G",
                 BatterySourceKind.DareuDriver => "DAREU 官方驱动",
                 BatterySourceKind.DareuEk75 => "DAREU EK75 HID",
                 BatterySourceKind.System => "系统电源",

@@ -7,16 +7,15 @@ namespace HaloVolt.Providers.Hid;
 internal sealed record Nordic52Target(string Path, string DisplayName, ushort VendorId, ushort ProductId);
 
 /// <summary>
-/// Compx / Nordic 52840 wireless mice (DAREU A950 Air / Wing, ATK, VXE, ...).
-/// The battery collection is usage page 0xFF02 / usage 0x02. One 17-byte interrupt
-/// transaction returns the percentage at byte 6.
+/// Compx / Nordic 52840 wireless devices (DAREU, ATK, VXE, VGN, MCHOSE,
+/// Darmoshark and other brands using the 0xFF02:0x02 battery collection).
+/// One 17-byte interrupt transaction returns the percentage at byte 6.
 ///
 /// Reference protocol description: Fan4Metal/mouse_tray (Nordic52 driver).
 /// This is a clean-room implementation of the wire format.
 /// </summary>
 internal static class Nordic52Battery
 {
-    private const ushort VendorId = 0x260D;
     private const ushort UsagePage = 0xFF02;
     private const ushort Usage = 0x0002;
     private const int ReportLength = 17;
@@ -26,7 +25,8 @@ internal static class Nordic52Battery
     public static bool TryCreateTarget(HidPhysicalGroup group, out Nordic52Target target)
     {
         target = null!;
-        if (group.VendorId != VendorId)
+        var path = group.FindInterface(UsagePage, Usage);
+        if (path is null)
         {
             return false;
         }
@@ -42,13 +42,13 @@ internal static class Nordic52Battery
 
         if (name is null)
         {
-            return false;
-        }
-
-        var path = group.FindInterface(UsagePage, Usage);
-        if (path is null)
-        {
-            return false;
+            name = group.Name;
+            if (string.IsNullOrWhiteSpace(name)
+                || name.Contains("HID", StringComparison.OrdinalIgnoreCase)
+                || name.Contains("USB Composite", StringComparison.OrdinalIgnoreCase))
+            {
+                name = group.VendorId == 0x260D ? "DAREU 2.4G 无线设备" : "2.4G 无线设备";
+            }
         }
 
         target = new Nordic52Target(path, name, group.VendorId, group.ProductId);

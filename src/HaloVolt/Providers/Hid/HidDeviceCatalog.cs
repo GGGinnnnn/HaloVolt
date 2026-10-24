@@ -78,7 +78,12 @@ internal sealed class HidDeviceCatalog
         {
             (0x01, 0x02), // mouse
             (0x01, 0x06), // keyboard
+            (0x01, 0x08), // system multi-axis
+            (0x01, 0x80), // system control
+            (0x0C, 0x01), // consumer control
+            (0x06, 0x20), // HID Battery Strength
             (0xFF00, 0x0001), // vendor-defined (Logitech and others)
+            (0xFF01, 0x0001), // vendor-defined (second common collection)
             (0xFF02, 0x0002) // Compx / Nordic 52840 battery collection
         };
 

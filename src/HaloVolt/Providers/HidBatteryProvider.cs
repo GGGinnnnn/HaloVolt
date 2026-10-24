@@ -63,20 +63,25 @@ internal sealed class HidBatteryProvider : IBatteryProvider
                 }
             }
 
-            var kind = nordicTarget is not null
+            var knownDareuMouse = nordicTarget is { VendorId: 0x260D, ProductId: 0x1175 or 0x1193 or 0x1154 or 0x1196 };
+            var kind = knownDareuMouse
                 ? DeviceKind.Mouse
-                : group.HasMouse && group.HasKeyboard
-                    ? DeviceKind.KeyboardMouse
-                    : group.HasMouse
-                        ? DeviceKind.Mouse
-                        : DeviceKind.Keyboard;
+                : nordicTarget is not null
+                    ? group.HasMouse && group.HasKeyboard
+                        ? DeviceKind.KeyboardMouse
+                        : group.HasMouse ? DeviceKind.Mouse : DeviceKind.Keyboard
+                    : group.HasMouse && group.HasKeyboard
+                        ? DeviceKind.KeyboardMouse
+                        : group.HasMouse
+                            ? DeviceKind.Mouse
+                            : DeviceKind.Keyboard;
 
-            var isWiredDareu = nordicTarget?.ProductId is 0x1193 or 0x1196;
+            var isWiredDareu = nordicTarget is { VendorId: 0x260D, ProductId: 0x1193 or 0x1196 };
             var transport = nordicTarget is not null
                 ? (isWiredDareu ? TransportKind.Usb : TransportKind.UsbReceiver)
                 : group.IsReceiverName ? TransportKind.UsbReceiver : TransportKind.Usb;
             var detail = nordicTarget is not null
-                ? $"{group.VendorId:X4}:{group.ProductId:X4} · Nordic 52840 电量通道"
+                ? $"{group.VendorId:X4}:{group.ProductId:X4} · Compx / Nordic 52840 · 17 字节电量通道"
                 : $"{group.VendorId:X4}:{group.ProductId:X4} · {group.Interfaces.Count} 个 HID 集合";
 
             AppLog.Debug($"HID 组 {group.Name} {group.VendorId:X4}:{group.ProductId:X4} 集合=[{string.Join(", ", group.Interfaces.Select(i => $"{i.UsagePage:X4}:{i.UsageId:X4}"))}] Nordic={nordicTarget is not null} StandardBattery={target is not null}");
@@ -89,7 +94,7 @@ internal sealed class HidBatteryProvider : IBatteryProvider
                 Transport = transport,
                 ProviderId = Id,
                 ProviderName = nordicTarget is not null
-                    ? "DAREU / Nordic 2.4G"
+                    ? "Compx / Nordic 2.4G"
                     : target is null ? "HID 设备（暂无标准电量接口）" : "HID Battery Strength",
                 SupportsBattery = nordicTarget is not null || target is not null,
                 Detail = detail,
@@ -127,7 +132,7 @@ internal sealed class HidBatteryProvider : IBatteryProvider
                         DateTimeOffset.Now,
                         BatterySourceKind.DareuNordic,
                         IsCached: false,
-                        Note: "DAREU Nordic 2.4G");
+                        Note: "Nordic 52 2.4G");
             }, cancellationToken);
         }
 

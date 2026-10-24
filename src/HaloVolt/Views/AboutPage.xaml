@@ -86,6 +86,11 @@
                             <TextBlock Text="直连设备及 Unifying / Bolt 类接收器；读取 Battery Status / Voltage 特性。支持一接收器多设备。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
                             <TextBlock Text="标准 HID Battery Strength" Style="{DynamicResource SettingTitleStyle}" Margin="0,11,0,0" />
                             <TextBlock Text="Generic Device Controls (0x06) / Battery Strength (0x20) 功能报告，适用于暴露该特性的 2.4G 设备。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
+                            <TextBlock Text="Compx / Nordic 52840 2.4G" Style="{DynamicResource SettingTitleStyle}" Margin="0,11,0,0" />
+                            <TextBlock Text="0xFF02:0x02 的 17 字节电量事务；覆盖 DAREU、ATK、VXE、VGN、MCHOSE、Darmoshark 等同方案设备。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
+                            <TextBlock Text="DAREU EK75" Style="{DynamicResource SettingTitleStyle}" Margin="0,11,0,0" />
+                            <TextBlock Text="65 字节 HID feature 的 Power / Battery Status 命令；官方驱动开关均可用。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
+                            <TextBlock Text="具体型号与限制见 docs/COMPATIBILITY.md；设备无电量通道时任何软件都无法读取。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,10,0,0" Foreground="{DynamicResource TextTertiaryBrush}" />
                             <TextBlock Text="系统电池" Style="{DynamicResource SettingTitleStyle}" Margin="0,11,0,0" />
                             <TextBlock Text="通过 GetSystemPowerStatus 读取笔记本内置电池，无需 WMI 常驻。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
                         </StackPanel>

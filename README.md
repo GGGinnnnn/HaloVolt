@@ -18,6 +18,7 @@ HaloVolt 是一个 Windows 10/11 桌面小工具：读取无线鼠标、键盘�
 - **现代化托盘浮层**：右键显示带实时电量的 WPF 浮层，而不是老式系统菜单。
 - **调试与诊断**：查看原始 HID 通道、设备解析、运行环境、日志；可导出诊断报告。
 - **无电量通道的设备默认隐藏**：可在「通用」中改回显示；原始通道仍会在诊断页列出。
+- **多品牌协议适配**：BLE Battery Service、Logitech HID++、标准 HID Battery Strength、Compx / Nordic 52840 2.4G（DAREU / ATK / VXE / VGN / MCHOSE 等方案）以及 DAREU EK75。
 - **DAREU EK75 支持**：直接通过 65 字节厂商 HID 命令读取电量；官方 DAREU Driver 正在运行时优先使用其显示值，关闭驱动也能读。
 - **缩到托盘提示**：可选择每次通过关闭/最小化隐藏到托盘时，是否用气泡提示一次。
 - **开机自启与启动行为**：支持静默启动、启动后打开设置；不需要管理员权限。
@@ -57,12 +58,24 @@ HaloVolt 是一个 Windows 10/11 桌面小工具：读取无线鼠标、键盘�
 
 ## 支持协议与实测设备
 
-- **Bluetooth LE Battery Service**：`0x180F` / `0x2A19`。
-- **DAREU / Compx / Nordic 52840 鼠标**：接收器 `VID_260D`，`0xFF02:0x02` 的 17 字节事务；本机 `DAREU Receiver`（`260D:1175`）读取到鼠标 **25%**。
-- **DAREU EK75**：官方驱动运行时优先读取其显示值；驱动关闭时直接发送 65 字节 HID feature 命令（Power Management / Battery Status），本机读取到 **54%**。无需管理员权限，也不依赖 DAREU Driver 常驻。
+- **Bluetooth LE Battery Service**：`0x180F` / `0x2A19`；大多数蓝牙 LE 键鼠可用。
+- **Compx / Nordic 52840（2.4G）**：`0xFF02:0x02` 的 17 字节事务；不再限定 DAREU VID，ATK / VXE / VGN / MCHOSE / Darmoshark 等同方案设备也会尝试读取。本机 `DAREU Receiver`（`260D:1175`）读取到鼠标 **25%**。
+- **DAREU EK75**：65 字节 HID feature 的 `Power Management / Battery Status`；本机 **54%**，关闭官方驱动也能读。
 - **Logitech HID++ 2.0**：直连或 Unifying/Bolt 接收器；特性 `0x1004` / `0x1000` / `0x1001`。
 - **标准 HID Battery Strength**：Generic Device Controls（Usage Page `0x06`）中的 Battery Strength（Usage `0x20`）。
 - **系统电池**：笔记本内置电池。
+
+### 兼容性矩阵
+
+| 协议 | 覆盖的常见品牌/型号 | 状态 |
+| --- | --- | --- |
+| BLE Battery Service | Logitech MX / Keychron K 系列 / Microsoft / Rapoo / 小米等 | 协议支持，按设备是否暴露 0x180F 判定 |
+| Logitech HID++ 2.0 | MX Master 3S/3/2S、MX Keys S、MX Anywhere 3S、G Pro X Superlight 2、G502 X、G915/G913、G304 等 | 协议支持 |
+| HID Battery Strength | 部分 HP / Dell / Lenovo / Microsoft 办公键鼠、公版 2.4G | 协议支持，按 feature 判定 |
+| Compx / Nordic 52840 | DAREU A950 系列、ATK、VXE、VGN、MCHOSE、Darmoshark、Waizowl、Ninjutso 等 | 尝试读取，按 `FF02:0002` 与合法响应判定 |
+| DAREU EK75 | EK75（2.4G） | 已实机验证 |
+
+完整列表、无法支持的情况和判断方法见 **[docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)**。表中的“常见型号”是协议覆盖示例，不代表每一台都已实机验证。
 
 ### 关于 DAREU EK75
 
@@ -155,7 +168,7 @@ dotnet run --project .\src\HaloVolt\HaloVolt.csproj
 ## 已知限制
 
 - 电量百分比取决于设备/Windows 的上报口径；Logitech 电压换算可能与 G HUB 略有差异。
-- DAREU 目前覆盖 Nordic 52 鼠标协议与 EK75 的 65 字节 HID 电量命令；其他 DAREU 型号需要单独适配。
+- 协议覆盖 BLE Battery Service、Logitech HID++ 2.0、标准 HID Battery Strength、Compx / Nordic 52840 2.4G，以及 DAREU EK75 的 65 字节 HID 电量命令；具体型号见 [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)。
 - 其他私有 2.4G 协议、input-only vendor collection 无法主动查询。
 - 设备休眠时保留上次成功读取的值，界面会显示“本地缓存”和较旧时间。
 - “不唤醒”是默认策略，不是对所有硬件的绝对保证。

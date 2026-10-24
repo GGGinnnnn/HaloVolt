@@ -39,6 +39,7 @@ Copy-Item (Join-Path $root "LICENSE") $out -Force
 $docs = Join-Path $out "docs\screenshots"
 New-Item -ItemType Directory -Path $docs -Force | Out-Null
 Copy-Item (Join-Path $root "docs\screenshots\*") $docs -Force
+Copy-Item (Join-Path $root "docs\*.md") (Join-Path $out "docs") -Force
 
 if (-not $NoZip) {
     $zip = Join-Path $dist ($name + ".zip")
