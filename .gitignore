@@ -1,0 +1,13 @@
+bin/
+obj/
+dist/
+.vs/
+*.user
+*.suo
+*.pdb
+*.log
+TestResults/
+tools/research/
+tools/Probe/
+tools/IconPreview/
+HaloVolt.slnx

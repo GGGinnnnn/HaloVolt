@@ -1,0 +1,135 @@
+<UserControl x:Class="HaloVolt.Views.AboutPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="36,24,36,32" MaxWidth="1180">
+            <StackPanel>
+                <TextBlock Text="关于" Style="{DynamicResource PageTitleStyle}" />
+                <TextBlock Text="一款把「安静」放在第一位的电量托盘工具。" Style="{DynamicResource PageSubtitleStyle}" Margin="0,5,0,0" />
+            </StackPanel>
+
+            <Border Style="{DynamicResource CardStyle}" Margin="0,20,0,0" Padding="26">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/Assets/logo.png" Width="76" Height="76" RenderOptions.BitmapScalingMode="HighQuality" />
+                        <StackPanel Margin="20,4,0,0" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="HaloVolt" FontFamily="{DynamicResource DisplayFontFamily}" FontSize="26" FontWeight="SemiBold" />
+                                <TextBlock Text="环电" FontFamily="{DynamicResource DisplayFontFamily}" FontSize="16" Foreground="{DynamicResource TextSecondaryBrush}" Margin="9,7,0,0" />
+                            </StackPanel>
+                            <TextBlock Text="让每一格电量，都心中有数。" Style="{DynamicResource CaptionTextStyle}" Margin="0,4,0,0" />
+                            <TextBlock Text="{Binding VersionText}" Style="{DynamicResource MicroTextStyle}" Margin="0,5,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                    <Border Grid.Column="1" Style="{DynamicResource ChipStyle}" Background="{DynamicResource AccentSoftBrush}" BorderThickness="0" VerticalAlignment="Top">
+                        <TextBlock Text="{Binding AboutDeviceCount}" FontSize="11" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <Border Style="{DynamicResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="设计原则" Style="{DynamicResource SectionTitleStyle}" />
+                            <StackPanel Margin="0,14,0,0">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Width="28" Height="28" CornerRadius="7" Background="{DynamicResource AccentSoftBrush}" Margin="0,0,11,0">
+                                        <TextBlock Text="&#xEA18;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="14" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="不打扰设备" FontWeight="SemiBold" FontSize="12.5" />
+                                        <TextBlock Text="优先读 Windows 缓存；只在你活动时向醒着的设备查询。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Width="28" Height="28" CornerRadius="7" Background="{DynamicResource InputBrush}" Margin="0,0,11,0">
+                                        <TextBlock Text="&#xE7E8;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="轻量后台" FontWeight="SemiBold" FontSize="12.5" />
+                                        <TextBlock Text="事件驱动，无设备轮询常驻线程；关闭窗口即释放界面。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="28" Height="28" CornerRadius="7" Background="{DynamicResource InputBrush}" Margin="0,0,11,0">
+                                        <TextBlock Text="&#xE72E;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="14" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="本地优先" FontWeight="SemiBold" FontSize="12.5" />
+                                        <TextBlock Text="不联网、不遥测、不安装内核驱动，设置只保存在本机。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{DynamicResource CardStyle}" Margin="0,14,0,0">
+                        <StackPanel>
+                            <TextBlock Text="支持的协议" Style="{DynamicResource SectionTitleStyle}" />
+                            <TextBlock Text="Bluetooth LE Battery Service" Style="{DynamicResource SettingTitleStyle}" Margin="0,13,0,0" />
+                            <TextBlock Text="标准 0x180F / 0x2A19 电量特征，优先使用 Windows GATT 缓存，断开连接时不强制读取。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
+                            <TextBlock Text="Logitech HID++ 2.0" Style="{DynamicResource SettingTitleStyle}" Margin="0,11,0,0" />
+                            <TextBlock Text="直连设备及 Unifying / Bolt 类接收器；读取 Battery Status / Voltage 特性。支持一接收器多设备。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
+                            <TextBlock Text="标准 HID Battery Strength" Style="{DynamicResource SettingTitleStyle}" Margin="0,11,0,0" />
+                            <TextBlock Text="Generic Device Controls (0x06) / Battery Strength (0x20) 功能报告，适用于暴露该特性的 2.4G 设备。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
+                            <TextBlock Text="系统电池" Style="{DynamicResource SettingTitleStyle}" Margin="0,11,0,0" />
+                            <TextBlock Text="通过 GetSystemPowerStatus 读取笔记本内置电池，无需 WMI 常驻。" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <Border Style="{DynamicResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="运行信息" Style="{DynamicResource SectionTitleStyle}" />
+                            <Border Background="{DynamicResource InputBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="7" Padding="12" Margin="0,12,0,0">
+                                <TextBox Text="{Binding DiagnosticSummary, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" Background="Transparent"
+                                         Foreground="{DynamicResource TextSecondaryBrush}" FontFamily="{DynamicResource MonoFontFamily}" FontSize="11"
+                                         TextWrapping="Wrap" MaxHeight="210" VerticalScrollBarVisibility="Auto" />
+                            </Border>
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <Button Content="复制诊断信息" Style="{DynamicResource SecondaryButtonStyle}" Command="{Binding CopyDiagnosticReportCommand}" />
+                                <Button Content="打开数据目录" Style="{DynamicResource SubtleButtonStyle}" Margin="8,0,0,0" Command="{Binding OpenDataFolderCommand}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{DynamicResource CardStyle}" Margin="0,14,0,0">
+                        <StackPanel>
+                            <TextBlock Text="致谢与许可" Style="{DynamicResource SectionTitleStyle}" />
+                            <TextBlock Text="HaloVolt 是一个独立实现的桌面小工具。HID++ 协议细节参考了 Logitech 公开特性文档与开源社区（Solaar / LGSTrayBattery）的协议说明，未复制其实现代码。"
+                                       Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,10,0,0" />
+                            <TextBlock Text="界面使用 .NET 8、WPF 与 Windows 原生通知 API，不含第三方运行时。项目以 MIT 许可证发布。"
+                                       Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,7,0,0" />
+                            <Border Style="{DynamicResource ThinSeparatorStyle}" Margin="0,14,0,10" />
+                            <TextBlock Text="HaloVolt 与 Logitech、Microsoft 无隶属关系。Logitech、Unifying、Bolt 等名称归其各自所有者。"
+                                       Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource AccentSoftBrush}" CornerRadius="9" Padding="15,13" Margin="0,14,0,0">
+                        <StackPanel>
+                            <TextBlock Text="遇到问题？" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource AccentBrush}" />
+                            <TextBlock Text="先打开「通用 → 查看运行日志」，日志会记录扫描、读取失败原因与通知发送结果。大多数「读不到电量」是因为设备处于休眠或未暴露标准电量接口。"
+                                       Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,5,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

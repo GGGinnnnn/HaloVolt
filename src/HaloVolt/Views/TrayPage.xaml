@@ -1,0 +1,267 @@
+<UserControl x:Class="HaloVolt.Views.TrayPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:HaloVolt.Controls"
+             xmlns:models="clr-namespace:HaloVolt.Models"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="ColorSwatchButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Margin" Value="0,0,4,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Root" Background="Transparent" BorderBrush="Transparent" BorderThickness="1.5" CornerRadius="15">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource TextTertiaryBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="36,24,36,32" MaxWidth="1180">
+            <Grid>
+                <StackPanel>
+                    <TextBlock Text="托盘圆环" Style="{DynamicResource PageTitleStyle}" />
+                    <TextBlock Text="在系统托盘用两个同心圆显示鼠标与键盘电量，随时扫一眼就知道。"
+                               Style="{DynamicResource PageSubtitleStyle}" Margin="0,5,0,0" />
+                </StackPanel>
+                <Border Style="{DynamicResource ChipStyle}" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Visibility="{Binding Settings.TrayBatteryIconEnabled, Converter={StaticResource BoolToVisibility}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7" Fill="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <TextBlock Text="圆环图标已显示" FontSize="11" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.1*" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <Border Style="{DynamicResource CardStyle}" Padding="22">
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock Text="实时预览" Style="{DynamicResource SectionTitleStyle}" />
+                                <TextBlock Text="透明背景，自适应任务栏" Style="{DynamicResource MicroTextStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <Border Background="#181C22" CornerRadius="10" Padding="20" Margin="0,14,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="1" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <Grid Width="112" Height="112">
+                                            <controls:BatteryRing OuterValue="{Binding RingOuterValue}" InnerValue="{Binding RingInnerValue}"
+                                                                  OuterBrush="{Binding OuterRingBrush}" InnerBrush="{Binding InnerRingBrush}"
+                                                                  TrackBrush="#408A96A8" StrokeThickness="7" ShowSystemDot="{Binding Settings.TrayCenterDot}"
+                                                                  SystemValue="{Binding SystemDevice.BatteryPercent, TargetNullValue=NaN}" SystemBrush="#7CE07C" />
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                <TextBlock Text="{Binding OuterPercentText}" FontSize="20" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center" />
+                                                <TextBlock Text="外圈" FontSize="9" Foreground="#AAB4C3" HorizontalAlignment="Center" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Text="32px 图标效果" FontSize="10" Foreground="#AAB4C3" HorizontalAlignment="Center" Margin="0,8,0,0" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="1" Background="#2A313C" Margin="0,4" />
+                                    <StackPanel Grid.Column="2" Margin="20,4,0,0" VerticalAlignment="Center">
+                                        <Grid Margin="0,0,0,10">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="8" Height="8" Fill="{Binding MouseAccentBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Text="外圈" FontSize="10" Foreground="#AAB4C3" Margin="7,0,0,0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding OuterLabel}" FontSize="12" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right" />
+                                        </Grid>
+                                        <Grid Margin="0,0,0,10">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="8" Height="8" Fill="{Binding KeyboardAccentBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Text="内圈" FontSize="10" Foreground="#AAB4C3" Margin="7,0,0,0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding InnerLabel}" FontSize="12" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right" />
+                                        </Grid>
+                                        <Grid>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="6" Height="6" Fill="#7CE07C" VerticalAlignment="Center" />
+                                                <TextBlock Text="中心圆点" FontSize="10" Foreground="#AAB4C3" Margin="7,0,0,0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <TextBlock Text="笔记本电量" FontSize="11" Foreground="#C8D0DB" HorizontalAlignment="Right" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <TextBlock Text="{Binding TrayTooltip}" Style="{DynamicResource MicroTextStyle}" Margin="0,10,0,0" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{DynamicResource CardStyle}" Margin="0,14,0,0">
+                        <StackPanel>
+                            <TextBlock Text="显示与外观" Style="{DynamicResource SectionTitleStyle}" />
+
+                            <Grid Margin="0,16,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="额外的电量圆环托盘图标" Style="{DynamicResource SettingTitleStyle}" />
+                                    <TextBlock Text="保留主程序图标；关闭后仍会在右键菜单中监控电量。" Style="{DynamicResource SettingDescriptionStyle}" />
+                                </StackPanel>
+                                <ToggleButton Style="{DynamicResource ToggleSwitchStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsChecked="{Binding Settings.TrayBatteryIconEnabled, Mode=TwoWay}" />
+                            </Grid>
+
+                            <Grid Margin="0,18,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,16,0">
+                                    <TextBlock Text="外圈内容" Style="{DynamicResource SettingTitleStyle}" />
+                                    <TextBlock Text="内圈会自动显示另一种设备；也可在设备页面单独指定来源。" Style="{DynamicResource SettingDescriptionStyle}" />
+                                </StackPanel>
+                                <ComboBox Grid.Column="1" Width="176" Style="{DynamicResource ComboBoxStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          ItemsSource="{Binding RingContentOptions}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                                          SelectedValue="{Binding Settings.OuterRingContent, Mode=TwoWay}" />
+                            </Grid>
+
+                            <Border Style="{DynamicResource ThinSeparatorStyle}" Margin="0,18,0,4" />
+
+                            <Grid Margin="0,12,0,0">
+                                <TextBlock Text="鼠标颜色" Style="{DynamicResource SettingTitleStyle}" />
+                                <TextBlock Text="{Binding Settings.MouseColor}" Style="{DynamicResource MicroTextStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding ColorPalette}" Margin="0,8,0,0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{DynamicResource ColorSwatchButtonStyle}" Command="{Binding DataContext.SetMouseColorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}" ToolTip="{Binding}">
+                                            <Ellipse Width="20" Height="20" Fill="{Binding Converter={StaticResource HexToBrush}}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <Grid Margin="0,12,0,0">
+                                <TextBlock Text="键盘颜色" Style="{DynamicResource SettingTitleStyle}" />
+                                <TextBlock Text="{Binding Settings.KeyboardColor}" Style="{DynamicResource MicroTextStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding ColorPalette}" Margin="0,8,0,0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{DynamicResource ColorSwatchButtonStyle}" Command="{Binding DataContext.SetKeyboardColorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}" ToolTip="{Binding}">
+                                            <Ellipse Width="20" Height="20" Fill="{Binding Converter={StaticResource HexToBrush}}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <Border Style="{DynamicResource ThinSeparatorStyle}" Margin="0,18,0,4" />
+
+                            <Grid Margin="0,12,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="中心圆点显示笔记本电量" Style="{DynamicResource SettingTitleStyle}" />
+                                    <TextBlock Text="低于 10% 时圆点变红，低于 25% 时变黄；关闭后只保留双环。" Style="{DynamicResource SettingDescriptionStyle}" />
+                                </StackPanel>
+                                <ToggleButton Style="{DynamicResource ToggleSwitchStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsChecked="{Binding Settings.TrayCenterDot, Mode=TwoWay}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <Border Style="{DynamicResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="圆环怎么读" Style="{DynamicResource SectionTitleStyle}" />
+                            <StackPanel Margin="0,15,0,0">
+                                <Grid Margin="0,0,0,12">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="30" Height="30" CornerRadius="8" Background="{DynamicResource AccentSoftBrush}" Margin="0,0,10,0">
+                                            <TextBlock Text="&#xE962;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="15" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="外圈" Style="{DynamicResource MicroTextStyle}" />
+                                            <TextBlock Text="{Binding OuterDeviceName}" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" MaxWidth="220" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding OuterPercentText}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                </Grid>
+                                <Grid Margin="0,0,0,12">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="30" Height="30" CornerRadius="8" Background="{DynamicResource InputBrush}" Margin="0,0,10,0">
+                                            <TextBlock Text="&#xE765;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="15" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="内圈" Style="{DynamicResource MicroTextStyle}" />
+                                            <TextBlock Text="{Binding InnerDeviceName}" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" MaxWidth="220" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding InnerPercentText}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                </Grid>
+                                <TextBlock Text="圆环缺口朝上，顺时针填充。100% 为完整圆环；未读取到电量时显示虚线圈。"
+                                           Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" />
+                                <Button Content="选择圆环来源设备" Style="{DynamicResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" Margin="0,14,0,0"
+                                        Command="{Binding NavigateCommand}" CommandParameter="{x:Static models:PageKey.Devices}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{DynamicResource CardStyle}" Margin="0,14,0,0">
+                        <StackPanel>
+                            <TextBlock Text="托盘行为" Style="{DynamicResource SectionTitleStyle}" />
+                            <StackPanel Margin="0,13,0,0">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="&#xE8A7;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="14" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Top" Margin="0,1,9,0" />
+                                    <TextBlock Text="左键单击任一托盘图标，打开设置窗口。" Style="{DynamicResource CaptionTextStyle}" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="&#xE700;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="14" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Top" Margin="0,1,9,0" />
+                                    <TextBlock Text="右键菜单可安全刷新、暂停监控、切换圆环图标或退出。" Style="{DynamicResource CaptionTextStyle}" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xEA18;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="14" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Top" Margin="0,1,9,0" />
+                                    <TextBlock Text="悬停可查看鼠标、键盘与笔记本电量摘要。" Style="{DynamicResource CaptionTextStyle}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </StackPanel>
+                            <Border Style="{DynamicResource ThinSeparatorStyle}" Margin="0,15,0,10" />
+                            <TextBlock Text="低电量时圆环会变为红色。电量较低的设备会自动排到更显眼的位置。"
+                                       Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource AccentSoftBrush}" CornerRadius="9" Padding="14,12" Margin="0,14,0,0">
+                        <StackPanel>
+                            <TextBlock Text="提示" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource AccentBrush}" />
+                            <TextBlock Text="Windows 可能把新托盘图标收进「隐藏的图标」区域。可在任务栏设置中把 HaloVolt 的圆环图标设为始终显示。"
+                                       Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" LineHeight="17" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

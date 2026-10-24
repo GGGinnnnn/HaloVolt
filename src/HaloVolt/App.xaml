@@ -1,0 +1,18 @@
+<Application x:Class="HaloVolt.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:HaloVolt.Converters"
+             ShutdownMode="OnExplicitShutdown">
+    <Application.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+            <conv:InverseBooleanConverter x:Key="InverseBoolean" />
+            <conv:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility" />
+            <conv:NullToVisibilityConverter x:Key="NullToVisibility" />
+            <conv:NotNullToVisibilityConverter x:Key="NotNullToVisibility" />
+            <conv:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibility" />
+            <conv:SeverityToBrushConverter x:Key="SeverityToBrush" />
+            <conv:HexToBrushConverter x:Key="HexToBrush" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,293 @@
+<UserControl x:Class="HaloVolt.Views.OverviewPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:HaloVolt.Controls"
+             xmlns:models="clr-namespace:HaloVolt.Models"
+             mc:Ignorable="d"
+             d:DesignHeight="760" d:DesignWidth="940">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="36,24,36,32" MaxWidth="1180">
+
+            <!-- Header -->
+            <Grid>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="概览" Style="{DynamicResource PageTitleStyle}" />
+                        <Border Style="{DynamicResource ChipStyle}" Background="{DynamicResource AccentSoftBrush}" BorderThickness="0" Margin="12,2,0,0"
+                                Visibility="{Binding IsDemoMode, Converter={StaticResource BoolToVisibility}}">
+                            <TextBlock Text="演示模式" FontSize="11" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" />
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="所有电量，一目了然。所有读取，都不打扰设备。" Style="{DynamicResource PageSubtitleStyle}" Margin="0,5,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Button Style="{DynamicResource SubtleButtonStyle}" Command="{Binding ForceRefreshCommand}" ToolTip="可能唤醒休眠设备，请谨慎使用">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE945;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="13" Margin="0,0,7,0" />
+                            <TextBlock Text="强制读取" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{DynamicResource SecondaryButtonStyle}" Margin="8,0,0,0" Command="{Binding RefreshCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE72C;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="13" Margin="0,0,7,0" />
+                            <TextBlock Text="安全刷新" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Low battery banner -->
+            <Border Background="{DynamicResource DangerSoftBrush}" CornerRadius="9" Padding="14,10" Margin="0,18,0,0"
+                    Visibility="{Binding HasLowDevices, Converter={StaticResource BoolToVisibility}}">
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE7BA;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="16" Foreground="{DynamicResource DangerBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding LowDeviceCountText}" Margin="8,0,0,0" Foreground="{DynamicResource DangerBrush}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <TextBlock Text="，建议尽快充电。" Foreground="{DynamicResource DangerBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Button Content="查看设备" Style="{DynamicResource LinkButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Command="{Binding NavigateCommand}" CommandParameter="{x:Static models:PageKey.Devices}" />
+                </Grid>
+            </Border>
+
+            <Grid Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.45*" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Hero battery card -->
+                <Border Grid.Column="0" Style="{DynamicResource CardStyle}" Padding="24,22">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="224" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0" Width="206" Height="206" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <controls:BatteryRing OuterValue="{Binding RingOuterValue}"
+                                                  InnerValue="{Binding RingInnerValue}"
+                                                  OuterBrush="{Binding OuterRingBrush}"
+                                                  InnerBrush="{Binding InnerRingBrush}"
+                                                  TrackBrush="{DynamicResource RingTrackBrush}"
+                                                  StrokeThickness="12"
+                                                  ShowSystemDot="False" />
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,2,0,0">
+                                <TextBlock Text="外圈" Style="{DynamicResource MicroTextStyle}" HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding OuterPercentText}" FontFamily="{DynamicResource DisplayFontFamily}" FontSize="34" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,1,0,1" />
+                                <TextBlock Text="{Binding OuterLabel}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Grid.Column="1" Margin="22,2,0,0">
+                            <Grid>
+                                <StackPanel>
+                                    <TextBlock Text="实时电量" FontSize="17" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding LastSyncText}" Style="{DynamicResource MicroTextStyle}" Margin="0,3,0,0" />
+                                </StackPanel>
+                                <Border Style="{DynamicResource ChipStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{DynamicResource AccentSoftBrush}" BorderThickness="0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE72E;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="11" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="安全读取" FontSize="10.5" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" Margin="4,0,0,0" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <Grid Margin="0,20,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="9" Height="9" Fill="{Binding MouseAccentBrush}" VerticalAlignment="Center" Margin="0,2,10,0" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="鼠标" Style="{DynamicResource MicroTextStyle}" />
+                                    <TextBlock Text="{Binding MouseName}" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                                </StackPanel>
+                                <TextBlock Grid.Column="2" Text="{Binding MousePercentText}" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="9" Height="9" Fill="{Binding KeyboardAccentBrush}" VerticalAlignment="Center" Margin="0,2,10,0" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="键盘" Style="{DynamicResource MicroTextStyle}" />
+                                    <TextBlock Text="{Binding KeyboardName}" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                                </StackPanel>
+                                <TextBlock Grid.Column="2" Text="{Binding KeyboardPercentText}" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0,17,0,14" />
+
+                            <Grid Visibility="{Binding HasSystemBattery, Converter={StaticResource BoolToVisibility}}">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="笔记本电池" Style="{DynamicResource MicroTextStyle}" />
+                                        <TextBlock Text="{Binding SystemPercentText}" HorizontalAlignment="Right" FontWeight="SemiBold" />
+                                    </Grid>
+                                    <ProgressBar Style="{DynamicResource ProgressBarStyle}" Value="{Binding SystemDevice.BatteryPercent, Mode=OneWay, FallbackValue=0}" Margin="0,8,0,0" />
+                                    <TextBlock Text="{Binding SystemSubtitle}" Style="{DynamicResource MicroTextStyle}" Margin="0,6,0,0" />
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Visibility="{Binding HasSystemBattery, Converter={StaticResource InverseBoolToVisibility}}">
+                                <TextBlock Text="未检测到内置电池" Style="{DynamicResource MicroTextStyle}" />
+                                <TextBlock Text="台式机或电池信息不可用" Style="{DynamicResource MicroTextStyle}" Margin="0,2,0,0" />
+                            </StackPanel>
+
+                            <Border Background="{DynamicResource InputBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="7" Padding="10,8" Margin="0,16,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xEA18;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="13" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="0,1,7,0" />
+                                    <TextBlock Grid.Column="1" Text="设备休眠时保留上次读数，不为刷新而扰醒它" Style="{DynamicResource MicroTextStyle}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Right column -->
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="14" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Style="{DynamicResource CardStyle}">
+                        <StackPanel>
+                            <Grid>
+                                <Border Width="36" Height="36" CornerRadius="9" Background="{DynamicResource AccentSoftBrush}" HorizontalAlignment="Left">
+                                    <TextBlock Text="&#xEA18;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="18" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <TextBlock Text="零唤醒读取" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="46,0,0,0" />
+                            </Grid>
+                            <TextBlock Text="优先读取 Windows 缓存与系统电源状态。只有你正在使用电脑时，才会向醒着的设备请求一次电量；设备休眠时保持安静。"
+                                       Style="{DynamicResource CaptionTextStyle}" Margin="0,12,0,0" LineHeight="20" />
+                            <Grid Margin="0,14,0,0">
+                                <Border Style="{DynamicResource ChipStyle}" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding RefreshStatusText}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                </Border>
+                                <Border Style="{DynamicResource ChipStyle}" HorizontalAlignment="Right">
+                                    <TextBlock Text="{Binding TrayStatusText}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="2" Style="{DynamicResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="快捷操作" Style="{DynamicResource SectionTitleStyle}" />
+                            <Button Content="管理设备与圆环来源" Style="{DynamicResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" Margin="0,13,0,0"
+                                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static models:PageKey.Devices}" />
+                            <Button Content="调整提醒阈值" Style="{DynamicResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" Margin="0,8,0,0"
+                                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static models:PageKey.Alerts}" />
+                            <Button Content="发送一条测试通知" Style="{DynamicResource SubtleButtonStyle}" HorizontalAlignment="Stretch" Margin="0,4,0,0"
+                                    Command="{Binding TestNotificationCommand}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- Summary tiles -->
+            <Grid Margin="0,18,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{DynamicResource CardStyle}" Padding="18,15">
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="监控中的设备" Style="{DynamicResource MicroTextStyle}" />
+                            <TextBlock Text="{Binding MonitoredDeviceCount}" FontSize="26" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            <TextBlock Text="{Binding DeviceCountText}" Style="{DynamicResource MicroTextStyle}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <TextBlock Text="&#xE7F4;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="20" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                    </Grid>
+                </Border>
+                <Border Grid.Column="2" Style="{DynamicResource CardStyle}" Padding="18,15">
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="低电量设备" Style="{DynamicResource MicroTextStyle}" />
+                            <TextBlock Text="{Binding LowDeviceCount}" FontSize="26" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            <TextBlock Text="{Binding LowDeviceCountText}" Style="{DynamicResource MicroTextStyle}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <TextBlock Text="&#xE7BA;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="20" Foreground="{DynamicResource WarningBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                    </Grid>
+                </Border>
+                <Border Grid.Column="4" Style="{DynamicResource CardStyle}" Padding="18,15">
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="上次同步" Style="{DynamicResource MicroTextStyle}" />
+                            <TextBlock Text="{Binding LastSyncText}" FontSize="18" FontWeight="SemiBold" Margin="0,9,0,0" />
+                            <TextBlock Text="{Binding NotificationStatusText}" Style="{DynamicResource MicroTextStyle}" Margin="0,3,0,0" />
+                        </StackPanel>
+                        <TextBlock Text="&#xE823;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="20" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Device status -->
+            <Border Style="{DynamicResource CardStyle}" Margin="0,18,0,0" Padding="22,18">
+                <StackPanel>
+                    <Grid>
+                        <TextBlock Text="设备状态" Style="{DynamicResource SectionTitleStyle}" />
+                        <Button Content="管理设备" Style="{DynamicResource LinkButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Command="{Binding NavigateCommand}" CommandParameter="{x:Static models:PageKey.Devices}" />
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding Devices}" Margin="0,10,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="38" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="30" Height="30" CornerRadius="7" Background="{DynamicResource InputBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding KindGlyph}" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="15" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="10,0,8,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Text="{Binding DetailText}" Style="{DynamicResource MicroTextStyle}" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,14,0">
+                                            <TextBlock Text="{Binding BatteryText}" FontWeight="SemiBold" FontSize="14" HorizontalAlignment="Right" />
+                                            <TextBlock Text="{Binding FreshnessText}" Style="{DynamicResource MicroTextStyle}" HorizontalAlignment="Right" Margin="0,2,0,0" />
+                                        </StackPanel>
+                                        <Border Grid.Column="3" Width="7" Height="7" CornerRadius="4" Background="{DynamicResource SuccessBrush}" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Border Padding="18,26" Background="{DynamicResource InputBrush}" CornerRadius="8" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                            Visibility="{Binding HasAnyDevice, Converter={StaticResource InverseBoolToVisibility}}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="&#xE7F4;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="24" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" />
+                            <TextBlock Text="尚未发现无线键鼠" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,8,0,0" />
+                            <TextBlock Text="连接支持电量上报的设备后，这里会出现实时状态。" Style="{DynamicResource MicroTextStyle}" HorizontalAlignment="Center" Margin="0,3,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

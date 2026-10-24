@@ -1,0 +1,181 @@
+<UserControl x:Class="HaloVolt.Views.DiagnosticsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" Loaded="Page_Loaded">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="36,24,36,32" MaxWidth="1180">
+            <Grid>
+                <StackPanel>
+                    <TextBlock Text="调试与诊断" Style="{DynamicResource PageTitleStyle}" />
+                    <TextBlock Text="把“能不能读、为什么读不到”摊开来看。演示模式只是模拟数据，诊断页展示的是真实枚举结果。"
+                               Style="{DynamicResource PageSubtitleStyle}" Margin="0,5,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Button Style="{DynamicResource SubtleButtonStyle}" Command="{Binding ForceRefreshCommand}" ToolTip="可能唤醒休眠设备">
+                        <TextBlock Text="强制读取" />
+                    </Button>
+                    <Button Style="{DynamicResource PrimaryButtonStyle}" Margin="8,0,0,0" Command="{Binding RefreshDiagnosticsCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE72C;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="13" Margin="0,0,7,0" />
+                            <TextBlock Text="重新收集" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <Border Style="{DynamicResource CardStyle}" Margin="0,20,0,0" Padding="18,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="调试模式" Style="{DynamicResource SettingTitleStyle}" />
+                        <TextBlock Text="开启后记录 HID 通道、协议请求/响应、读取失败原因与通知决策。日志仍在本地。" Style="{DynamicResource SettingDescriptionStyle}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" Style="{DynamicResource ToggleSwitchStyle}" VerticalAlignment="Center" Margin="16,0,0,0"
+                                  IsChecked="{Binding Settings.DebugMode, Mode=TwoWay}" />
+                </Grid>
+            </Border>
+
+            <Border Background="{DynamicResource AccentSoftBrush}" CornerRadius="8" Padding="13,9" Margin="0,12,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="&#xE946;" FontFamily="{DynamicResource SymbolFontFamily}" FontSize="14" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" Margin="0,1,8,0" />
+                    <TextBlock Grid.Column="1" Style="{DynamicResource MicroTextStyle}" TextWrapping="Wrap" VerticalAlignment="Center"
+                               Text="演示模式的数据来自内置模拟器，与你的真实设备无关。真实设备只有在暴露标准 BLE/HID 电量服务、Logitech HID++、DAREU Nordic 或 DAREU EK75 HID 电量命令时才会显示电量。" />
+                </Grid>
+            </Border>
+
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <Border Style="{DynamicResource CardStyle}" Padding="18,15">
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock Text="原始 HID 通道" Style="{DynamicResource SectionTitleStyle}" />
+                                <TextBlock Text="{Binding DiagnosticsStatus}" Style="{DynamicResource MicroTextStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <TextBlock Text="{Binding DiagnosticsSummaryText}" Style="{DynamicResource MicroTextStyle}" Margin="0,5,0,0" TextWrapping="Wrap" />
+                            <ItemsControl ItemsSource="{Binding Diagnostics.HidGroups}" Margin="0,8,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,10">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12.5" TextTrimming="CharacterEllipsis" MaxWidth="220" />
+                                                        <TextBlock Text="{Binding VidPid}" Style="{DynamicResource MicroTextStyle}" Margin="8,1,0,0" />
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding Support}" HorizontalAlignment="Right" FontSize="11" FontWeight="SemiBold">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="{x:Type TextBlock}">
+                                                                <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Supported}" Value="True">
+                                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+                                                <TextBlock Text="{Binding Usages}" Style="{DynamicResource MicroTextStyle}" Margin="0,3,0,0" />
+                                                <TextBlock Text="{Binding Detail}" Style="{DynamicResource MicroTextStyle}" Margin="0,2,0,0" TextWrapping="Wrap" MaxHeight="64" TextTrimming="CharacterEllipsis" FontFamily="{DynamicResource MonoFontFamily}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="没有项目？点击“重新收集”，或在通用页确认 BLE / HID 提供器已开启。" Style="{DynamicResource MicroTextStyle}" Margin="0,8,0,0" TextWrapping="Wrap"
+                                       Visibility="{Binding HasDiagnostics, Converter={StaticResource InverseBoolToVisibility}}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{DynamicResource CardStyle}" Margin="0,14,0,0" Padding="18,15">
+                        <StackPanel>
+                            <TextBlock Text="已配对 BLE 设备" Style="{DynamicResource SectionTitleStyle}" />
+                            <ItemsControl ItemsSource="{Binding Diagnostics.BleDevices}" Margin="0,8,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,8">
+                                            <Grid>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12.5" />
+                                                    <TextBlock Text="{Binding BatteryService}" Style="{DynamicResource MicroTextStyle}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top">
+                                                    <TextBlock Text="{Binding Connection}" FontSize="11" HorizontalAlignment="Right" />
+                                                    <TextBlock Text="{Binding Address}" Style="{DynamicResource MicroTextStyle}" HorizontalAlignment="Right" Margin="0,2,0,0" FontFamily="{DynamicResource MonoFontFamily}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="没有检测到已配对 BLE 设备。" Style="{DynamicResource MicroTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <Border Style="{DynamicResource CardStyle}" Padding="18,15">
+                        <StackPanel>
+                            <TextBlock Text="设备解析结果" Style="{DynamicResource SectionTitleStyle}" />
+                            <ItemsControl ItemsSource="{Binding Diagnostics.Devices}" Margin="0,8,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,8">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12.5" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{Binding Battery}" HorizontalAlignment="Right" FontWeight="SemiBold" />
+                                                </Grid>
+                                                <TextBlock Text="{Binding Provider}" Style="{DynamicResource MicroTextStyle}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding Source}" Style="{DynamicResource MicroTextStyle}" Margin="0,1,0,0" />
+                                                <TextBlock Text="{Binding Error}" Style="{DynamicResource DangerTextStyle}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{DynamicResource CardStyle}" Margin="0,14,0,0" Padding="18,15">
+                        <StackPanel>
+                            <TextBlock Text="运行环境" Style="{DynamicResource SectionTitleStyle}" />
+                            <TextBox Text="{Binding Diagnostics.Environment, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" Background="Transparent"
+                                     Foreground="{DynamicResource TextSecondaryBrush}" FontFamily="{DynamicResource MonoFontFamily}" FontSize="11"
+                                     TextWrapping="Wrap" MaxHeight="190" VerticalScrollBarVisibility="Auto" Margin="0,8,0,0" />
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <Button Content="导出报告" Style="{DynamicResource PrimaryButtonStyle}" Command="{Binding ExportDiagnosticsCommand}" />
+                                <Button Content="复制报告" Style="{DynamicResource SecondaryButtonStyle}" Margin="8,0,0,0" Command="{Binding CopyDiagnosticReportCommand}" />
+                                <Button Content="打开日志" Style="{DynamicResource SubtleButtonStyle}" Margin="8,0,0,0" Command="{Binding OpenLogCommand}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource InputBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,14,0,0" Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="最近日志" Style="{DynamicResource SectionTitleStyle}" FontSize="13" />
+                            <TextBox Text="{Binding Diagnostics.LogTail, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" Background="Transparent"
+                                     Foreground="{DynamicResource TextTertiaryBrush}" FontFamily="{DynamicResource MonoFontFamily}" FontSize="10.5"
+                                     TextWrapping="Wrap" MaxHeight="170" VerticalScrollBarVisibility="Auto" Margin="0,6,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
